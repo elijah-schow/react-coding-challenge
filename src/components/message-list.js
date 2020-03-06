@@ -34,7 +34,20 @@ class MessageList extends React.PureComponent {
     })
   }
 
-  handleClick = () => {
+  clearMessage(id) {
+    const { messages } = this.state
+    this.setState({
+      messages: messages.filter(m => m.id !== id)
+    })
+  }
+
+  clearAll() {
+    this.setState({
+      messages: [],
+    });
+  }
+
+  handleStartStopClick = () => {
     const isApiStarted = this.api.isStarted()
     if (isApiStarted) {
       this.api.stop()
@@ -42,6 +55,10 @@ class MessageList extends React.PureComponent {
       this.api.start()
     }
     this.forceUpdate()
+  }
+
+  handleClearAllClick = () => {
+    this.clearAll();
   }
 
   render() {
@@ -55,10 +72,14 @@ class MessageList extends React.PureComponent {
         <Container>
           <Button
             variant="contained"
-            onClick={this.handleClick}
+            onClick={this.handleStartStopClick}
           >
             {isApiStarted ? 'Stop Messages' : 'Start Messages'}
           </Button>
+          <Button
+            variant="contained"
+            onClick={this.handleClearAllClick}
+          >Clear</Button>
         </Container>
         <Grid container direction="row" spacing={2}>
           <Grid item md={4} sm={12} xs={12}>
