@@ -15,7 +15,7 @@ const useStyles = makeStyles({
     },
 })
 
-const Notification = ({ item }) => {
+const Notification = ({ item, clearMessage }) => {
     const classes = useStyles()
 
     let cardClass
@@ -27,12 +27,16 @@ const Notification = ({ item }) => {
         default: cardClass = classes.info; break;
     }
 
+    const handleClick = () => {
+        clearMessage(item.id);
+    }
+
     return (
         <Card>
             <CardContent className={cardClass}>
                 <Grid container justify="space-between" alignItems="center">
                     <Typography variant="body1">{item.message}</Typography>
-                    <Button size="small">Clear</Button>
+                    <Button size="small" onClick={handleClick}>Clear</Button>
                 </Grid>
             </CardContent>
         </Card>
@@ -45,7 +49,8 @@ Notification.propTypes = {
         id: PropTypes.string,
         priority: PropTypes.number,
         message: PropTypes.string,
-    })
+    }),
+    clearMessage: PropTypes.func,
 };
 
 export default Notification

@@ -3,14 +3,14 @@ import PropTypes from 'prop-types'
 import { Grid, Typography } from '@material-ui/core';
 import Notification from './notification'
 
-const NotificationList = ({ heading, items }) => (
+const NotificationList = ({ heading, items, clearMessage }) => (
     <div>
         <Typography variant="h6">{heading}</Typography>
         <Typography variant="body1">Count {items.length}</Typography>
         <Grid container direction="column" spacing={2}>
             {items.map(item => (
                 <Grid item key={item.id}>
-                    <Notification item={item} />
+                    <Notification item={item} clearMessage={clearMessage} />
                 </Grid>
             ))}
         </Grid>
@@ -26,7 +26,8 @@ NotificationList.propTypes = {
             priority: PropTypes.number,
             message: PropTypes.string,
         })
-    )
+    ),
+    clearMessage: PropTypes.func,
 };
 
 export default NotificationList

@@ -34,14 +34,14 @@ class MessageList extends React.PureComponent {
     })
   }
 
-  clearMessage(id) {
+  clearMessage = (id) => {
     const { messages } = this.state
     this.setState({
       messages: messages.filter(m => m.id !== id)
     })
   }
 
-  clearAll() {
+  clearAll = () => {
     this.setState({
       messages: [],
     });
@@ -66,6 +66,7 @@ class MessageList extends React.PureComponent {
     const errorMessages = this.state.messages.filter(message => message.priority === 1)
     const warningMessages = this.state.messages.filter(message => message.priority === 2)
     const infoMessages = this.state.messages.filter(message => message.priority === 3)
+    const clearMessage = this.clearMessage
 
     return (
       <div>
@@ -83,13 +84,13 @@ class MessageList extends React.PureComponent {
         </Container>
         <Grid container direction="row" spacing={2}>
           <Grid item md={4} sm={12} xs={12}>
-            <NotificationList heading="Error Type 1" items={errorMessages} />
+            <NotificationList heading="Error Type 1" items={errorMessages} clearMessage={clearMessage} />
           </Grid>
           <Grid item md={4} sm={12} xs={12}>
-            <NotificationList heading="Warning Type 2" items={warningMessages} />
+            <NotificationList heading="Warning Type 2" items={warningMessages} clearMessage={clearMessage} />
           </Grid>
           <Grid item md={4} sm={12} xs={12}>
-            <NotificationList heading="Info Type 3" items={infoMessages} />
+            <NotificationList heading="Info Type 3" items={infoMessages} clearMessage={clearMessage} />
           </Grid>
         </Grid>
       </div>
