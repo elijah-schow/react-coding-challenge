@@ -22,12 +22,12 @@ NotificationList.propTypes = {
     heading: PropTypes.string,
     items: PropTypes.arrayOf(
         PropTypes.shape({
-            id: PropTypes.string,
-            priority: PropTypes.number,
-            message: PropTypes.string,
+            id: PropTypes.string.isRequired,
+            priority: PropTypes.number.isRequired,
+            message: PropTypes.string.isRequired,
         })
-    ),
-    clearMessage: PropTypes.func,
+    ).isRequired,
+    clearMessage: PropTypes.func.isRequired,
 };
 
 export default NotificationList

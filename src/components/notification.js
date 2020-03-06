@@ -46,11 +46,11 @@ const Notification = ({ item, clearMessage }) => {
 // TODO: the type definition for a message is repeated in multiple files. Consolidate.
 Notification.propTypes = {
     item: PropTypes.shape({
-        id: PropTypes.string,
-        priority: PropTypes.number,
-        message: PropTypes.string,
+        id: PropTypes.string.isRequired,
+        priority: PropTypes.number.isRequired,
+        message: PropTypes.string.isRequired,
     }),
-    clearMessage: PropTypes.func,
+    clearMessage: PropTypes.func.isRequired,
 };
 
 export default Notification

@@ -1,13 +1,16 @@
 import React from 'react'
-import { Button, Container, Grid } from '@material-ui/core'
+import { Button, Container, Grid, Snackbar } from '@material-ui/core'
+
 import Api from '../api'
 import NotificationList from './notification-list'
+import Notification from './notification'
 
 class MessageList extends React.PureComponent {
   constructor(...args) {
     super(...args)
     this.state = {
       messages: [],
+      currentError: null,
     }
   }
 
@@ -29,21 +32,33 @@ class MessageList extends React.PureComponent {
         message,
       ],
     }, () => {
-      // Included to support initial direction. Please remove upon completion
-      console.log(messages)
+      if (message.priority === 1) {
+        this.setState({
+          currentError: message
+        });
+      }
     })
   }
 
   clearMessage = (id) => {
-    const { messages } = this.state
-    this.setState({
-      messages: messages.filter(m => m.id !== id)
-    })
+    const messages = this.state.messages.filter(m => m.id !== id);
+    const currentError = this.state.currentError;
+
+    if (currentError != null && currentError.id === id) {
+      this.setState({
+        messages,
+        currentError: null,
+      })
+    } else {
+      this.setState({ messages })
+    }
+
   }
 
   clearAll = () => {
     this.setState({
       messages: [],
+      currentError: null,
     });
   }
 
@@ -61,15 +76,35 @@ class MessageList extends React.PureComponent {
     this.clearAll();
   }
 
+  handleSnackbarClose = (id) => {
+    this.clearMessage(id);
+  }
+
   render() {
     const isApiStarted = this.api.isStarted()
     const errorMessages = this.state.messages.filter(message => message.priority === 1)
     const warningMessages = this.state.messages.filter(message => message.priority === 2)
     const infoMessages = this.state.messages.filter(message => message.priority === 3)
-    const clearMessage = this.clearMessage
+    const open = this.state.currentError != null;
+    const currentError = this.state.currentError;
 
     return (
       <div>
+
+        {/* Snackbar */}
+        <Snackbar
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+          autoHideDuration={2000}
+          open={open}
+          onClose={this.handleSnackbarClose}
+        >
+          {open
+            ? <Notification item={currentError} clearMessage={this.handleSnackbarClose} />
+            : null
+          }
+        </Snackbar>
+
+        {/* Buttons */}
         <Container>
           <Button
             variant="contained"
@@ -82,15 +117,29 @@ class MessageList extends React.PureComponent {
             onClick={this.handleClearAllClick}
           >Clear</Button>
         </Container>
+
+        {/* Messages */}
         <Grid container direction="row" spacing={2}>
           <Grid item md={4} sm={12} xs={12}>
-            <NotificationList heading="Error Type 1" items={errorMessages} clearMessage={clearMessage} />
+            <NotificationList
+              heading="Error Type 1"
+              items={errorMessages}
+              clearMessage={this.clearMessage}
+            />
           </Grid>
           <Grid item md={4} sm={12} xs={12}>
-            <NotificationList heading="Warning Type 2" items={warningMessages} clearMessage={clearMessage} />
+            <NotificationList
+              heading="Warning Type 2"
+              items={warningMessages}
+              clearMessage={this.clearMessage}
+            />
           </Grid>
           <Grid item md={4} sm={12} xs={12}>
-            <NotificationList heading="Info Type 3" items={infoMessages} clearMessage={clearMessage} />
+            <NotificationList
+              heading="Info Type 3"
+              items={infoMessages}
+              clearMessage={this.clearMessage}
+            />
           </Grid>
         </Grid>
       </div>
