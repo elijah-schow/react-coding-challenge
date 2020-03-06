@@ -1,6 +1,7 @@
 import React from 'react'
-import Button from '@material-ui/core/Button'
+import { Button, Container, Grid } from '@material-ui/core'
 import Api from '../api'
+import NotificationList from './notification-list'
 
 class MessageList extends React.PureComponent {
   constructor(...args) {
@@ -45,14 +46,31 @@ class MessageList extends React.PureComponent {
 
   render() {
     const isApiStarted = this.api.isStarted()
+    const errorMessages = this.state.messages.filter(message => message.priority === 1)
+    const warningMessages = this.state.messages.filter(message => message.priority === 2)
+    const infoMessages = this.state.messages.filter(message => message.priority === 3)
+
     return (
       <div>
-        <Button
-          variant="contained"
-          onClick={this.handleClick}
-        >
-          {isApiStarted ? 'Stop Messages' : 'Start Messages'}
-        </Button>
+        <Container>
+          <Button
+            variant="contained"
+            onClick={this.handleClick}
+          >
+            {isApiStarted ? 'Stop Messages' : 'Start Messages'}
+          </Button>
+        </Container>
+        <Grid container direction="row" spacing={2}>
+          <Grid item md={4} sm={12} xs={12}>
+            <NotificationList heading="Error Type 1" items={errorMessages} />
+          </Grid>
+          <Grid item md={4} sm={12} xs={12}>
+            <NotificationList heading="Warning Type 2" items={warningMessages} />
+          </Grid>
+          <Grid item md={4} sm={12} xs={12}>
+            <NotificationList heading="Info Type 3" items={infoMessages} />
+          </Grid>
+        </Grid>
       </div>
     )
   }
