@@ -9,7 +9,7 @@ const NotificationList = ({ heading, items }) => (
         <Typography variant="body1">Count {items.length}</Typography>
         <Grid container direction="column" spacing={2}>
             {items.map(item => (
-                <Grid item>
+                <Grid item key={item.id}>
                     <Notification item={item} />
                 </Grid>
             ))}
