@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { Button, Card, CardContent, Grid, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 
@@ -37,5 +38,14 @@ const Notification = ({ item }) => {
         </Card>
     )
 }
+
+// TODO: the type definition for a message is repeated in multiple files. Consolidate.
+Notification.propTypes = {
+    item: PropTypes.shape({
+        id: PropTypes.string,
+        priority: PropTypes.number,
+        message: PropTypes.string,
+    })
+};
 
 export default Notification
