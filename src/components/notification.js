@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Button, Card, CardContent, Grid, Typography } from '@material-ui/core'
+import { Box, Button, Paper, Grid, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 
 const useStyles = makeStyles({
@@ -18,13 +18,13 @@ const useStyles = makeStyles({
 const Notification = ({ item, clearMessage }) => {
     const classes = useStyles()
 
-    let cardClass
+    let priorityClass;
 
     switch (item.priority) {
-        case 1: cardClass = classes.error; break;
-        case 2: cardClass = classes.warning; break;
+        case 1: priorityClass = classes.error; break;
+        case 2: priorityClass = classes.warning; break;
         case 3:
-        default: cardClass = classes.info; break;
+        default: priorityClass = classes.info; break;
     }
 
     const handleClick = () => {
@@ -32,14 +32,14 @@ const Notification = ({ item, clearMessage }) => {
     }
 
     return (
-        <Card>
-            <CardContent className={cardClass}>
+        <Paper className={priorityClass} elevation={4}>
+            <Box p={2}>
                 <Grid container justify="space-between" alignItems="center">
                     <Typography variant="body1">{item.message}</Typography>
                     <Button size="small" onClick={handleClick}>Clear</Button>
                 </Grid>
-            </CardContent>
-        </Card>
+            </Box>
+        </Paper>
     )
 }
 
