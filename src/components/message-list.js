@@ -1,14 +1,13 @@
 import React from 'react'
-import {
-  AppBar,
-  Box,
-  Button,
-  Container,
-  Grid,
-  Toolbar,
-  Typography,
-  withStyles,
-} from '@material-ui/core'
+
+import AppBar from '@material-ui/core/AppBar'
+import Box from '@material-ui/core/Box'
+import Button from '@material-ui/core/Button'
+import Container from '@material-ui/core/Container'
+import Grid from '@material-ui/core/Grid'
+import Toolbar from '@material-ui/core/Toolbar'
+import Typography from '@material-ui/core/Typography'
+import { withStyles } from '@material-ui/core/styles'
 
 import Api from '../api'
 import NotificationList from './notification-list'
