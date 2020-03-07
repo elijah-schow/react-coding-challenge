@@ -7,6 +7,8 @@ import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
 import { makeStyles } from '@material-ui/core/styles'
 
+import messageType from '../messageType'
+
 const useStyles = makeStyles({
     error: {
         backgroundColor: '#F56236'
@@ -47,13 +49,8 @@ const Notification = ({ item, clearMessage }) => {
     )
 }
 
-// TODO: the type definition for a message is repeated in multiple files. Consolidate.
 Notification.propTypes = {
-    item: PropTypes.shape({
-        id: PropTypes.string.isRequired,
-        priority: PropTypes.number.isRequired,
-        message: PropTypes.string.isRequired,
-    }),
+    item: messageType.isRequired,
     clearMessage: PropTypes.func.isRequired,
 };
 

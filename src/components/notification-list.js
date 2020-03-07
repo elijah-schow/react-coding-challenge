@@ -1,8 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import Box from '@material-ui/core/Box';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
+import Box from '@material-ui/core/Box'
+import Grid from '@material-ui/core/Grid'
+import Typography from '@material-ui/core/Typography'
+
+import messageType from '../messageType'
 import Notification from './notification'
 
 const NotificationList = ({ heading, items, clearMessage }) => (
@@ -21,16 +23,9 @@ const NotificationList = ({ heading, items, clearMessage }) => (
     </div>
 )
 
-// TODO: the type definition for a message is repeated in multiple files. Consolidate.
 NotificationList.propTypes = {
     heading: PropTypes.string,
-    items: PropTypes.arrayOf(
-        PropTypes.shape({
-            id: PropTypes.string.isRequired,
-            priority: PropTypes.number.isRequired,
-            message: PropTypes.string.isRequired,
-        })
-    ).isRequired,
+    items: PropTypes.arrayOf(messageType).isRequired,
     clearMessage: PropTypes.func.isRequired,
 };
 

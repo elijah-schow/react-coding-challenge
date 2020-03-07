@@ -10,6 +10,8 @@ import Snackbar from '@material-ui/core/Snackbar'
 import Typography from '@material-ui/core/Typography'
 import { makeStyles } from '@material-ui/core/styles'
 
+import messageType from '../messageType'
+
 // TODO: this is repeated from notification.js. Consolidate.
 const useStyles = makeStyles({
     error: {
@@ -47,11 +49,7 @@ const ErrorSnackbar = ({ item, open, onClose }) => {
 }
 
 ErrorSnackbar.propTypes = {
-    item: PropTypes.shape({
-        id: PropTypes.string.isRequired,
-        priority: PropTypes.number.isRequired,
-        message: PropTypes.string.isRequired,
-    }),
+    item: messageType,
     open: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
 }
