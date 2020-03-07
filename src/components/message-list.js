@@ -59,18 +59,22 @@ class MessageList extends React.PureComponent {
   }
 
   clearMessage = (id) => {
-    const messages = this.state.messages.filter(m => m.id !== id);
-    const currentError = this.state.currentError;
+    // Remove the selected message without mutating the original
+    const messages = this.state.messages.filter(m => m.id !== id)
+
+    // If the snackbar is displaying this error
+    const currentError = this.state.currentError
 
     if (currentError != null && currentError.id === id) {
+      // Remove the message and close the snackbar too
       this.setState({
         messages,
         currentError: null,
       })
     } else {
+      // Just remove the message
       this.setState({ messages })
     }
-
   }
 
   clearAll = () => {
@@ -94,8 +98,8 @@ class MessageList extends React.PureComponent {
     this.clearAll();
   }
 
-  handleSnackbarClose = (id) => {
-    this.clearMessage(id);
+  handleSnackbarClose = () => {
+    this.setState({ currentError: null });
   }
 
   render() {
