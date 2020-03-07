@@ -1,9 +1,28 @@
 import React from 'react'
-import { Button, Container, Grid, Snackbar } from '@material-ui/core'
+import {
+  AppBar,
+  Box,
+  Button,
+  Container,
+  Grid,
+  Snackbar,
+  Toolbar,
+  Typography,
+  withStyles
+} from '@material-ui/core'
 
 import Api from '../api'
 import NotificationList from './notification-list'
 import Notification from './notification'
+
+const ColorButton = withStyles((theme) => ({
+  root: {
+    backgroundColor: "#00E2C4",
+    '&:hover': {
+      backgroundColor: "#00C9AF",
+    },
+  }
+}))(Button)
 
 class MessageList extends React.PureComponent {
   constructor(...args) {
@@ -89,9 +108,12 @@ class MessageList extends React.PureComponent {
     const currentError = this.state.currentError;
 
     return (
-      <div>
-
-        {/* Snackbar */}
+      <>
+        <AppBar color="inherit" elevation={1}>
+          <Toolbar>
+            <Typography variant="h6">Help.com Coding Challenge</Typography>
+          </Toolbar>
+        </AppBar>
         <Snackbar
           anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
           autoHideDuration={2000}
@@ -103,46 +125,45 @@ class MessageList extends React.PureComponent {
             : null
           }
         </Snackbar>
-
-        {/* Buttons */}
         <Container>
-          <Button
-            variant="contained"
-            onClick={this.handleStartStopClick}
-          >
-            {isApiStarted ? 'Stop Messages' : 'Start Messages'}
-          </Button>
-          <Button
-            variant="contained"
-            onClick={this.handleClearAllClick}
-          >Clear</Button>
+          <Box textAlign="center" mt={10} mb={5}>
+            <ColorButton
+              variant="contained"
+              onClick={this.handleStartStopClick}
+              style={{ marginRight: "1rem" }}
+            >
+              {isApiStarted ? 'Stop Messages' : 'Start Messages'}
+            </ColorButton>
+            <ColorButton
+              variant="contained"
+              onClick={this.handleClearAllClick}
+            >Clear</ColorButton>
+          </Box>
+          <Grid container direction="row" spacing={2}>
+            <Grid item md={4} sm={12} xs={12}>
+              <NotificationList
+                heading="Error Type 1"
+                items={errorMessages}
+                clearMessage={this.clearMessage}
+              />
+            </Grid>
+            <Grid item md={4} sm={12} xs={12}>
+              <NotificationList
+                heading="Warning Type 2"
+                items={warningMessages}
+                clearMessage={this.clearMessage}
+              />
+            </Grid>
+            <Grid item md={4} sm={12} xs={12}>
+              <NotificationList
+                heading="Info Type 3"
+                items={infoMessages}
+                clearMessage={this.clearMessage}
+              />
+            </Grid>
+          </Grid>
         </Container>
-
-        {/* Messages */}
-        <Grid container direction="row" spacing={2}>
-          <Grid item md={4} sm={12} xs={12}>
-            <NotificationList
-              heading="Error Type 1"
-              items={errorMessages}
-              clearMessage={this.clearMessage}
-            />
-          </Grid>
-          <Grid item md={4} sm={12} xs={12}>
-            <NotificationList
-              heading="Warning Type 2"
-              items={warningMessages}
-              clearMessage={this.clearMessage}
-            />
-          </Grid>
-          <Grid item md={4} sm={12} xs={12}>
-            <NotificationList
-              heading="Info Type 3"
-              items={infoMessages}
-              clearMessage={this.clearMessage}
-            />
-          </Grid>
-        </Grid>
-      </div>
+      </>
     )
   }
 }
