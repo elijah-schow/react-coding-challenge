@@ -5,15 +5,14 @@ import {
   Button,
   Container,
   Grid,
-  Snackbar,
   Toolbar,
   Typography,
-  withStyles
+  withStyles,
 } from '@material-ui/core'
 
 import Api from '../api'
 import NotificationList from './notification-list'
-import Notification from './notification'
+import ErrorSnackbar from './error-snackbar'
 
 const ColorButton = withStyles((theme) => ({
   root: {
@@ -114,17 +113,7 @@ class MessageList extends React.PureComponent {
             <Typography variant="h6">Help.com Coding Challenge</Typography>
           </Toolbar>
         </AppBar>
-        <Snackbar
-          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-          autoHideDuration={2000}
-          open={open}
-          onClose={this.handleSnackbarClose}
-        >
-          {open
-            ? <Notification item={currentError} clearMessage={this.handleSnackbarClose} />
-            : null
-          }
-        </Snackbar>
+        <ErrorSnackbar item={currentError} open={open} onClose={this.handleSnackbarClose} />
         <Container>
           <Box textAlign="center" mt={10} mb={5}>
             <ColorButton
