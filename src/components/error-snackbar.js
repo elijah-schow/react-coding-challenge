@@ -29,7 +29,7 @@ const ErrorSnackbar = ({ items }) => {
     const lastItem = items.length > 0 ? items[items.length - 1] : null
     useEffect(() => {
         if (lastItem != null) {
-            send('OPEN')
+            send('MESSAGE')
         }
     }, [send, lastItem])
 
@@ -39,6 +39,7 @@ const ErrorSnackbar = ({ items }) => {
             autoHideDuration={2000}
             open={state.matches('open')}
             onClose={() => send('CLOSE')}
+            onExited={() => send('ANIMATION_END')}
         >
             <Paper className={classes.error} elevation={4}>
                 <Grid container justify="space-between">

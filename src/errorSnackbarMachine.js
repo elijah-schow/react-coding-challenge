@@ -13,10 +13,21 @@ const errorSnackbarMachine = Machine(
         initial: 'closed',
         states: {
             closed: {
-                on: { OPEN: 'open' }
+                initial: 'closed',
+                states: {
+                    closed: {
+                        on: { MESSAGE: '#errorSnackbar.open' }
+                    },
+                    closeThenOpen: {
+                        on: { ANIMATION_END: '#errorSnackbar.open' }
+                    },
+                },
             },
             open: {
-                on: { CLOSE: 'closed' }
+                on: {
+                    CLOSE: 'closed',
+                    MESSAGE: 'closed.closeThenOpen'
+                }
             },
         }
     },
