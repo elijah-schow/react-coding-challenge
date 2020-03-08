@@ -11,7 +11,10 @@ const NotificationList = ({ heading, items, clearMessage }) => (
     <div>
         <Box mb={1}>
             <Typography variant="h6">{heading}</Typography>
-            <Typography variant="body1">Count {items.length}</Typography>
+            <Typography variant="body1">
+                <span>Count</span>
+                <span title="count">{items.length}</span>
+            </Typography>
         </Box>
         <Grid container direction="column" spacing={2}>
             {items.map(item => (
