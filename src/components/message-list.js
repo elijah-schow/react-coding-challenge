@@ -27,7 +27,6 @@ class MessageList extends React.PureComponent {
     super(...args)
     this.state = {
       messages: [],
-      currentError: null,
     }
   }
 
@@ -48,32 +47,15 @@ class MessageList extends React.PureComponent {
         ...messages.slice(),
         message,
       ],
-    }, () => {
-      if (message.priority === 1) {
-        this.setState({
-          currentError: message
-        });
-      }
     })
   }
 
+  /**
+   * Remove the selected message without mutating the original
+   */
   clearMessage = (id) => {
-    // Remove the selected message without mutating the original
     const messages = this.state.messages.filter(m => m.id !== id)
-
-    // If the snackbar is displaying this error
-    const currentError = this.state.currentError
-
-    if (currentError != null && currentError.id === id) {
-      // Remove the message and close the snackbar too
-      this.setState({
-        messages,
-        currentError: null,
-      })
-    } else {
-      // Just remove the message
-      this.setState({ messages })
-    }
+    this.setState({ messages })
   }
 
   clearAll = () => {
@@ -97,17 +79,11 @@ class MessageList extends React.PureComponent {
     this.clearAll();
   }
 
-  handleSnackbarClose = () => {
-    this.setState({ currentError: null });
-  }
-
   render() {
     const isApiStarted = this.api.isStarted()
     const errorMessages = this.state.messages.filter(message => message.priority === 1)
     const warningMessages = this.state.messages.filter(message => message.priority === 2)
     const infoMessages = this.state.messages.filter(message => message.priority === 3)
-    const open = this.state.currentError != null;
-    const currentError = this.state.currentError;
 
     return (
       <>
@@ -116,7 +92,7 @@ class MessageList extends React.PureComponent {
             <Typography variant="h6">Help.com Coding Challenge</Typography>
           </Toolbar>
         </AppBar>
-        <ErrorSnackbar item={currentError} open={open} onClose={this.handleSnackbarClose} />
+        <ErrorSnackbar items={errorMessages} />
         <Container>
           <Box textAlign="center" mt={10} mb={5}>
             <ColorButton

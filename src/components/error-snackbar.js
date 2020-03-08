@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 
 import CloseIcon from '@material-ui/icons/Close'
@@ -9,7 +9,9 @@ import IconButton from '@material-ui/core/IconButton'
 import Snackbar from '@material-ui/core/Snackbar'
 import Typography from '@material-ui/core/Typography'
 import { makeStyles } from '@material-ui/core/styles'
+import { useMachine } from '@xstate/react'
 
+import errorSnackbarMachine from '../errorSnackbarMachine'
 import messageType from '../messageType'
 
 // TODO: this is repeated from notification.js. Consolidate.
@@ -20,26 +22,34 @@ const useStyles = makeStyles({
 })
 
 
-const ErrorSnackbar = ({ item, open, onClose }) => {
+const ErrorSnackbar = ({ items }) => {
     const classes = useStyles()
+    const [state, send] = useMachine(errorSnackbarMachine)
+
+    const lastItem = items.length > 0 ? items[items.length - 1] : null
+    useEffect(() => {
+        if (lastItem != null) {
+            send('OPEN')
+        }
+    }, [send, lastItem])
 
     return (
         <Snackbar
             anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
             autoHideDuration={2000}
-            open={open}
-            onClose={onClose}
+            open={state.matches('open')}
+            onClose={() => send('CLOSE')}
         >
             <Paper className={classes.error} elevation={4}>
                 <Grid container justify="space-between">
                     <Grid item>
-                        <IconButton onClick={onClose}>
+                        <IconButton onClick={() => send('CLOSE')}>
                             <CloseIcon />
                         </IconButton>
                     </Grid>
                     <Grid item xs>
                         <Box py={1.5} pr={3}>
-                            <Typography variant="body1">{item && item.message}</Typography>
+                            <Typography variant="body1">{lastItem && lastItem.message}</Typography>
                         </Box>
                     </Grid>
                 </Grid>
@@ -49,9 +59,7 @@ const ErrorSnackbar = ({ item, open, onClose }) => {
 }
 
 ErrorSnackbar.propTypes = {
-    item: messageType,
-    open: PropTypes.bool.isRequired,
-    onClose: PropTypes.func.isRequired,
+    items: PropTypes.arrayOf(messageType).isRequired,
 }
 
 export default ErrorSnackbar
