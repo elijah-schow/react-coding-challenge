@@ -33,6 +33,7 @@ class MessageList extends React.PureComponent {
     super(...args)
     this.state = {
       messages: [],
+      currentError: null,
     }
   }
 
@@ -61,17 +62,26 @@ class MessageList extends React.PureComponent {
         ...messages.slice(),
         message,
       ],
+      currentError: message.priority === 1
+        ? message
+        : this.state.currentError,
     })
   }
 
   /**
-   * Remove the selected message without mutating the original
+   * Remove the selected message
    *
    * @param {String} id the id of the message you want to remove from the list
    */
   clearMessage = (id) => {
-    const messages = this.state.messages.filter(m => m.id !== id)
-    this.setState({ messages })
+    this.setState({
+      /** Remove ethe selected message without modifying the original list */
+      messages: this.state.messages.filter(m => m.id !== id),
+      /** Ensure the snackbar closes if it is displaying the removed error */
+      currentError: this.currentError != null && this.currentError.id === id
+        ? null
+        : this.currentError,
+    })
   }
 
   /**
@@ -104,6 +114,13 @@ class MessageList extends React.PureComponent {
     this.clearAll();
   }
 
+  /**
+   * Handle when the snackbar closes
+   */
+  handleSnackbarClose = () => {
+    this.setState({ currentError: null });
+  }
+
   render() {
     const isApiStarted = this.api.isStarted()
     const errorMessages = this.state.messages.filter(message => message.priority === 1)
@@ -117,7 +134,7 @@ class MessageList extends React.PureComponent {
             <Typography variant="h6">Help.com Coding Challenge</Typography>
           </Toolbar>
         </AppBar>
-        <ErrorSnackbar items={errorMessages} />
+        <ErrorSnackbar item={this.state.currentError} onClose={this.handleSnackbarClose} />
         <Container>
           <Box textAlign="center" mt={10} mb={5}>
             <ColorButton

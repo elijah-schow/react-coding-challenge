@@ -27,40 +27,53 @@ const useStyles = makeStyles({
  * @see errorSnackbarMachine.js for further details about how this component's
  * local state is handled.
  *
- * @note known limitaiton: if a bunch of errors are received at once, this
+ * @fixme known limitation: if the currently displayed error is cleared, the
+ * snackbar will briefly display an empty message before closing. Ideally the
+ * message would stay intact while the snackbar closes.
+ * 
+ * @maybe known limitation: if a bunch of errors are received at once, this
  * component will skip to the last one because it can't handle receiving errors
  * faster than the component can animate (<500ms). If it's important to display
  * every single error message, implementing a queue could solve this problem.
+ *
  */
-const ErrorSnackbar = ({ items }) => {
+const ErrorSnackbar = ({ item, onClose }) => {
     const classes = useStyles()
     const [state, send] = useMachine(errorSnackbarMachine)
 
-    const lastItem = items.length > 0 ? items[items.length - 1] : null
     useEffect(() => {
-        if (lastItem != null) {
+        if (item != null) {
+            // Open the snackbar
             send('MESSAGE')
+        } else {
+            // Close the snackbar because this message has been removed
+            send('CLOSE')
         }
-    }, [send, lastItem])
+    }, [send, item])
+
+    const handleClose = e => {
+        send('CLOSE')
+        onClose(e)
+    };
 
     return (
         <Snackbar
             anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
             autoHideDuration={2000}
             open={state.matches('open')}
-            onClose={() => send('CLOSE')}
+            onClose={handleClose}
             onExited={() => send('ANIMATION_END')}
         >
             <Paper className={classes.error} elevation={4}>
                 <Grid container justify="space-between">
                     <Grid item>
-                        <IconButton onClick={() => send('CLOSE')}>
+                        <IconButton onClick={handleClose}>
                             <CloseIcon />
                         </IconButton>
                     </Grid>
                     <Grid item xs>
                         <Box py={1.5} pr={3}>
-                            <Typography variant="body1">{lastItem && lastItem.message}</Typography>
+                            <Typography variant="body1">{item && item.message}</Typography>
                         </Box>
                     </Grid>
                 </Grid>
@@ -70,7 +83,8 @@ const ErrorSnackbar = ({ items }) => {
 }
 
 ErrorSnackbar.propTypes = {
-    items: PropTypes.arrayOf(messageType).isRequired,
+    item: messageType,
+    onClose: PropTypes.func.isRequired,
 }
 
 export default ErrorSnackbar
