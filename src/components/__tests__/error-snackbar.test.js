@@ -1,22 +1,18 @@
 import React from 'react'
 import { act } from 'react-dom/test-utils';
-import { render, getByRole, getByText, fireEvent } from '@testing-library/react'
+import { render, getByRole, getAllByText, fireEvent } from '@testing-library/react'
 
 import ErrorSnackbar from '../error-snackbar'
 
 const noop = () => { }
 
-const message = () => ({
-    id: "930b1506-699c-57d9-b697-a6b2bbfc63e9",
-    priority: 1,
-    message: "The quick, brown fox jumped over the lazy dog.",
-});
+const message = () => "The quick, brown fox jumped over the lazy dog."
 
 describe('error-snackbar', () => {
 
     it('renders #smoke', () => {
         const props = {
-            item: message(),
+            message: message(),
             onClose: noop,
         }
         const { container } = render(<ErrorSnackbar {...props} />)
@@ -24,13 +20,15 @@ describe('error-snackbar', () => {
     })
 
     it('displays the message', () => {
-        const item = message()
-        const props = { item, onClose: noop }
+        const props = {
+            message: message(),
+            onClose: noop
+        }
         const { container } = render(<ErrorSnackbar {...props} />)
 
-        const node = getByText(container, item.message)
+        const nodes = getAllByText(container, message)
 
-        expect(node).toBeDefined()
+        expect(nodes).toBeDefined()
     })
 
     /**
@@ -39,7 +37,10 @@ describe('error-snackbar', () => {
      */
     it('calls the event handler when the close button is clicked', () => {
         const onClose = jest.fn()
-        const props = { item: message(), onClose }
+        const props = {
+            message: message(),
+            onClose,
+        }
         const { container } = render(<ErrorSnackbar {...props} />)
         it.todo('closes after 2 seconds')
 
@@ -55,7 +56,10 @@ describe('error-snackbar', () => {
         jest.useFakeTimers();
 
         const onClose = jest.fn()
-        const props = { item: message(), onClose }
+        const props = {
+            message: message(),
+            onClose,
+        }
         const { container } = render(<ErrorSnackbar {...props} />)
 
         expect(onClose).not.toBeCalled()

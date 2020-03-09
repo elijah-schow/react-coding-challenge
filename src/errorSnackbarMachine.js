@@ -17,6 +17,9 @@ const errorSnackbarMachine = Machine(
     {
         id: 'errorSnackbar',
         initial: 'closed',
+        context: {
+            message: '',
+        },
         states: {
             closed: {
                 initial: 'closed',
@@ -30,6 +33,7 @@ const errorSnackbarMachine = Machine(
                 },
             },
             open: {
+                entry: ['setMessage'],
                 on: {
                     CLOSE: 'closed',
                     MESSAGE: 'closed.closeThenOpen'
@@ -37,6 +41,13 @@ const errorSnackbarMachine = Machine(
             },
         }
     },
+    {
+        actions: {
+            setMessage: (context, event) => {
+                context.message = event.message
+            }
+        }
+    }
 )
 
 export default errorSnackbarMachine

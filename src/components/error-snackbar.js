@@ -12,7 +12,6 @@ import { makeStyles } from '@material-ui/core/styles'
 import { useMachine } from '@xstate/react'
 
 import errorSnackbarMachine from '../errorSnackbarMachine'
-import messageType from '../messageType'
 
 // TODO: this is repeated from notification.js. Consolidate.
 const useStyles = makeStyles({
@@ -26,10 +25,6 @@ const useStyles = makeStyles({
  *
  * @see errorSnackbarMachine.js for further details about how this component's
  * local state is handled.
- *
- * @fixme known limitation: if the currently displayed error is cleared, the
- * snackbar will briefly display an empty message before closing. Ideally the
- * message would stay intact while the snackbar closes.
  * 
  * @maybe known limitation: if a bunch of errors are received at once, this
  * component will skip to the last one because it can't handle receiving errors
@@ -37,19 +32,19 @@ const useStyles = makeStyles({
  * every single error message, implementing a queue could solve this problem.
  *
  */
-const ErrorSnackbar = ({ item, onClose }) => {
+const ErrorSnackbar = ({ message, onClose }) => {
     const classes = useStyles()
     const [state, send] = useMachine(errorSnackbarMachine)
 
     useEffect(() => {
-        if (item != null) {
+        if (message != null) {
             // Open the snackbar
-            send('MESSAGE')
+            send('MESSAGE', { message })
         } else {
             // Close the snackbar because this message has been removed
             send('CLOSE')
         }
-    }, [send, item])
+    }, [send, message])
 
     const handleClose = e => {
         send('CLOSE')
@@ -73,7 +68,7 @@ const ErrorSnackbar = ({ item, onClose }) => {
                     </Grid>
                     <Grid item xs>
                         <Box py={1.5} pr={3}>
-                            <Typography variant="body1">{item && item.message}</Typography>
+                            <Typography variant="body1">{state.context.message}</Typography>
                         </Box>
                     </Grid>
                 </Grid>
@@ -83,7 +78,9 @@ const ErrorSnackbar = ({ item, onClose }) => {
 }
 
 ErrorSnackbar.propTypes = {
-    item: messageType,
+    /** The error message to display next */
+    message: PropTypes.string,
+    /** An event handler that is called when the snackbar closes */
     onClose: PropTypes.func.isRequired,
 }
 

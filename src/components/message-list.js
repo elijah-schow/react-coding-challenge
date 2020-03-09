@@ -126,6 +126,7 @@ class MessageList extends React.PureComponent {
     const errorMessages = this.state.messages.filter(message => message.priority === 1)
     const warningMessages = this.state.messages.filter(message => message.priority === 2)
     const infoMessages = this.state.messages.filter(message => message.priority === 3)
+    const currentErrorMessage = this.state.currentError ? this.state.currentError.message : null
 
     return (
       <>
@@ -134,7 +135,7 @@ class MessageList extends React.PureComponent {
             <Typography variant="h6">Help.com Coding Challenge</Typography>
           </Toolbar>
         </AppBar>
-        <ErrorSnackbar item={this.state.currentError} onClose={this.handleSnackbarClose} />
+        <ErrorSnackbar message={currentErrorMessage} onClose={this.handleSnackbarClose} />
         <Container>
           <Box textAlign="center" mt={10} mb={5}>
             <ColorButton
