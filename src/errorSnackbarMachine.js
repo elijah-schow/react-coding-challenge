@@ -2,7 +2,7 @@ import { Machine } from 'xstate'
 
 /**
  * The error snackbar's behavior is modeled as a finite state machine.
- *
+ * 
  * Paste this machine into https://xstate.js.org/viz/ to play around with a
  * visualization of it. Visit https://xstate.js.org/docs/ for more information
  * about how xstate and state machines work.
@@ -53,7 +53,7 @@ const errorSnackbarMachine = Machine(
                     CLOSE: 'closed',
                     MESSAGE: {
                         target: 'closed.closeThenOpen',
-                        actions: ['setMessage'],
+                        actions: ['setNextMessage'],
                     },
                 }
             },
