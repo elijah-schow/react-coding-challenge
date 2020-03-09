@@ -12,6 +12,11 @@ import { Machine } from 'xstate'
  * then immediately re-open with the new error message. Previously, the snackbar
  * would just stay open and the text would change to the new value, which looked
  * a little weird.
+ *
+ * @fixme `setNextMessage` and `unsetNextMessage` feel overly complicated. There
+ * is probably a simpler way to acheive the same thing. These extra methods are
+ * here because if you call setMessage right away, the text will change before
+ * the snackbar is finished closing, which isn't what we want. 
  */
 const errorSnackbarMachine = Machine(
     {
@@ -19,24 +24,37 @@ const errorSnackbarMachine = Machine(
         initial: 'closed',
         context: {
             message: '',
+            nextMessage: '',
         },
         states: {
             closed: {
                 initial: 'closed',
                 states: {
                     closed: {
-                        on: { MESSAGE: '#errorSnackbar.open' }
+                        on: {
+                            MESSAGE: {
+                                target: '#errorSnackbar.open',
+                                actions: ['setMessage']
+                            },
+                        },
                     },
                     closeThenOpen: {
-                        on: { ANIMATION_END: '#errorSnackbar.open' }
+                        on: {
+                            ANIMATION_END: {
+                                target: '#errorSnackbar.open',
+                                actions: ['unsetNextMessage'],
+                            }
+                        },
                     },
                 },
             },
             open: {
-                entry: ['setMessage'],
                 on: {
                     CLOSE: 'closed',
-                    MESSAGE: 'closed.closeThenOpen'
+                    MESSAGE: {
+                        target: 'closed.closeThenOpen',
+                        actions: ['setMessage'],
+                    },
                 }
             },
         }
@@ -45,7 +63,14 @@ const errorSnackbarMachine = Machine(
         actions: {
             setMessage: (context, event) => {
                 context.message = event.message
-            }
+            },
+            setNextMessage: (context, event) => {
+                context.nextMessage = event.message
+            },
+            unsetNextMessage: (context, event) => {
+                context.message = context.nextMessage
+                context.nextMessage = ''
+            },
         }
     }
 )
