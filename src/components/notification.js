@@ -21,6 +21,10 @@ const useStyles = makeStyles({
     },
 })
 
+/**
+ * Display an individual notification. The background color changes based on the
+ * message type.
+ */
 const Notification = ({ item, clearMessage }) => {
     const classes = useStyles()
 
@@ -50,7 +54,9 @@ const Notification = ({ item, clearMessage }) => {
 }
 
 Notification.propTypes = {
+    /** Meesage object (see messageType.js) */
     item: messageType.isRequired,
+    /** Event handler for when the "clear" button is clicked */
     clearMessage: PropTypes.func.isRequired,
 };
 

@@ -21,7 +21,17 @@ const useStyles = makeStyles({
     },
 })
 
-
+/**
+ * Display a snackbar each time an error is received.
+ *
+ * @see errorSnackbarMachine.js for further details about how this component's
+ * local state is handled.
+ *
+ * @note known limitaiton: if a bunch of errors are received at once, this
+ * component will skip to the last one because it can't handle receiving errors
+ * faster than the component can animate (<500ms). If it's important to display
+ * every single error message, implementing a queue could solve this problem.
+ */
 const ErrorSnackbar = ({ items }) => {
     const classes = useStyles()
     const [state, send] = useMachine(errorSnackbarMachine)

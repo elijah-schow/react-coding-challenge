@@ -22,6 +22,12 @@ const ColorButton = withStyles((theme) => ({
   }
 }))(Button)
 
+/**
+ * This is the main application component. It manages both application state and
+ * renders the app's layout.
+ *
+ * @todo separate state management into its own container component
+ */
 class MessageList extends React.PureComponent {
   constructor(...args) {
     super(...args)
@@ -40,6 +46,14 @@ class MessageList extends React.PureComponent {
     this.api.start()
   }
 
+  /**
+   * The API calls this function when a new message is added.
+   *
+   * @param {Object} message
+   * @property {String} message.id
+   * @property {Number} message.priority
+   * @property {String} message.message
+   */
   messageCallback(message) {
     const { messages } = this.state
     this.setState({
@@ -52,12 +66,17 @@ class MessageList extends React.PureComponent {
 
   /**
    * Remove the selected message without mutating the original
+   *
+   * @param {String} id the id of the message you want to remove from the list
    */
   clearMessage = (id) => {
     const messages = this.state.messages.filter(m => m.id !== id)
     this.setState({ messages })
   }
 
+  /**
+   * Remove all messages from the list
+   */
   clearAll = () => {
     this.setState({
       messages: [],
@@ -65,6 +84,9 @@ class MessageList extends React.PureComponent {
     });
   }
 
+  /**
+   * Handle when the start/stop button is clicked
+   */
   handleStartStopClick = () => {
     const isApiStarted = this.api.isStarted()
     if (isApiStarted) {
@@ -75,6 +97,9 @@ class MessageList extends React.PureComponent {
     this.forceUpdate()
   }
 
+  /**
+   * Handle when the "clear" button is clicked
+   */
   handleClearAllClick = () => {
     this.clearAll();
   }

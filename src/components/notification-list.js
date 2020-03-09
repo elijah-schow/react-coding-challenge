@@ -7,6 +7,10 @@ import Typography from '@material-ui/core/Typography'
 import messageType from '../messageType'
 import Notification from './notification'
 
+/**
+ * Display a column of messages, including a heading, message counter, and list
+ * of messages.
+ */
 const NotificationList = ({ heading, items, clearMessage }) => (
     <div>
         <Box mb={1}>
@@ -27,8 +31,11 @@ const NotificationList = ({ heading, items, clearMessage }) => (
 )
 
 NotificationList.propTypes = {
+    /** Heading text */
     heading: PropTypes.string,
+    /** The array of messages to display */
     items: PropTypes.arrayOf(messageType).isRequired,
+    /** An event handler for when the user removes a specific message */
     clearMessage: PropTypes.func.isRequired,
 };
 
